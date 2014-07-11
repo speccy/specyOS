@@ -1,3 +1,4 @@
+*.c~
 *.o
 *.swp
 spex.img
