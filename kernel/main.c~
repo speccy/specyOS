@@ -1,0 +1,13 @@
+#include <stddef.h>
+#include <stdint.h>
+#include <screen.h>
+
+void k_main()
+{
+	terminal_initialize();
+	/* Since there is no support for newlines in terminal_putchar yet, \n will
+	   produce some VGA specific character instead. This is normal. */
+	terminal_writestring("Hekllo, kernel World! also rip cals future");
+}
+
+ 
