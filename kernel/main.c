@@ -11,6 +11,7 @@
 #include <paging.h>
 #include <kheap.h>
 #include <multiboot.h>
+#include <console.h>
 
 multiboot_t *sys_multiboot_info;
 
@@ -56,13 +57,18 @@ void k_main(multiboot_t *mboot_ptr)
 			drawPixel(x,y,0x000000, scr_ptr);
 		}
 	}
+	
+	uint8_t* console_ptr = (uint8_t*) (0xD0000000 + ((21) * scr_pitch));
+
 	drawString(5, 5, "specyOS v0.0.2", 0x33ADFF, 8, 0, scr_ptr);
 	//drawString(5+8*8, 5, "", 0xFFFFFF, 8, 0, scr_ptr);
 
 	drawString(5+10, 5+32, "Installed Global Descriptor Tables", 0xffffff, 8, 0, scr_ptr);
 	drawString(5+10, 5+48, "Installed Interrupt Descriptor Tables", 0xffffff, 8, 0, scr_ptr);
 	drawString(5+10, 5+64, "Initialised Paging", 0xffffff, 8, 0, scr_ptr);
+	drawString(5+10, 800-16-5, "Teston", 0xffffff, 8, 0, scr_ptr);
 
+	scroll(scr_ptr);
 	asm volatile ("sti");
 
 }

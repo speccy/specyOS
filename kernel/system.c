@@ -14,6 +14,13 @@ void * memset(void * dest, int val, size_t count)
 	return dest;
 }
 
+void * memcpy(void * restrict dest, const void * restrict src, size_t count) {
+	asm volatile ("cld; rep movsb" : "+c" (count), "+S" (src), "+D" (dest) :: "memory");
+	return dest;
+}
+
+
+
 void outb(unsigned short port, unsigned char data) {
 	asm volatile ("outb %1, %0" : : "dN" (port), "a" (data));
 }

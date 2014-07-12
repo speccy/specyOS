@@ -14,6 +14,8 @@
 #include <timer.h>
 
 void * memset(void * dest, int val, size_t count);
+void * memcpy(void * restrict dest, const void * restrict src, size_t count);
+
 void outb(unsigned short port, unsigned char data);
 unsigned char inb(unsigned short port);
 
