@@ -67,7 +67,7 @@ void k_main(multiboot_t *mboot_ptr)
 	drawString(5+10, 5+48, "Installed Interrupt Descriptor Tables", 0xffffff, 8, 0, scr_ptr);
 	drawString(5+10, 5+64, "Initialised Paging", 0xffffff, 8, 0, scr_ptr);
 	drawString(5+10, 800-16-5, "Teston", 0xffffff, 8, 0, scr_ptr);*/
-	
+	init_console();
 	int i;
 	for (i=0; i<160*25; i++)
 		console_putstr("te", scr_ptr);

@@ -12,8 +12,8 @@ extern uint16_t scr_width;
 extern uint16_t scr_pitch;
 
 uint16_t row, col = 0;
-uint16_t row_max = 800 / 16;
-uint16_t col_max = 1280 / 8;
+uint16_t row_max;
+uint16_t col_max;
 
 int fg_col = 0xffffff;
 
@@ -21,6 +21,8 @@ void init_console()
 {
 	row = 0;
 	col = 0;
+	row_max = scr_height / 16;
+	col_max = scr_width / 8;
 }
 
 void clear(uint8_t* ctx)
