@@ -43,7 +43,7 @@ void console_putch(char c, uint8_t* ctx)
 {
 	if (c == '\n') {
 		col = 0;
-		row++;
+		scroll(ctx);
 	}
 	else {
 		if (col >= col_max){

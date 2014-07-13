@@ -119,6 +119,8 @@ void drawPixel(int x, int y, int RGB, uint8_t* ctx);
 void drawString(int x, int y, char *string, int color, int fontSize, int tall, uint8_t* ctx);
 void drawChar(int x, int y, unsigned char character, int fill, uint8_t* ctx);
 
+void init_kbd();
+
 
 
 #endif

@@ -74,7 +74,7 @@ void k_main(multiboot_t *mboot_ptr)
 	console_putstr("rip ne's bingas\n", scr_ptr);
 	console_putstr("and cal's future", scr_ptr);
 
-
+	init_kbd();
 
 	//scroll(scr_ptr);
 	asm volatile ("sti");
