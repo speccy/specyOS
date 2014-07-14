@@ -20,7 +20,6 @@ void * memcpy(void * restrict dest, const void * restrict src, size_t count) {
 }
 
 
-
 void outb(unsigned short port, unsigned char data) {
 	asm volatile ("outb %1, %0" : : "dN" (port), "a" (data));
 }
@@ -29,5 +28,25 @@ unsigned char inb(unsigned short port) {
 	unsigned char rv;
 	asm volatile ("inb %1, %0" : "=a" (rv) : "dN" (port));
 	return rv;
+}
+
+int strcmp(char *string1, char *string2)
+{
+	int i = 0;
+	int ret = 0;
+	while(string1[i] != '\0' && string2[i] != '\0')
+	{
+		if(string1[i] != string2[i])
+		{
+			ret = 1;
+			break;
+		}
+		i++;
+	}
+
+	if((string1[i] == '\0' && string2[i] != '\0') || (string1[i] != '\0' && string2[i] == '\0'))
+		ret = 1;
+
+	return ret;
 }
 

@@ -19,6 +19,8 @@ void * memcpy(void * restrict dest, const void * restrict src, size_t count);
 void outb(unsigned short port, unsigned char data);
 unsigned char inb(unsigned short port);
 
+int strcmp(char *string1, char *string2);
+
 typedef struct gdt_descriptor {
 	uint16_t limit_low;
 	uint16_t base_low;
