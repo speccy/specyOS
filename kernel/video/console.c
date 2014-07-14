@@ -30,6 +30,8 @@ int ghostx, ghosty = 0;
 int read_buf = 0;
 char* input;
 
+char* prompt = "spex-console:> ";
+
 void init_console(uint8_t* ctx)
 {
 	fg_col = 0xffffff;
@@ -149,11 +151,11 @@ void shell_handle(char c, uint8_t* ctx)
 		console_putstr(input, ctx);
 		console_putstr(": command not found\n", ctx);
 		console_putstr("\n", ctx);
-		console_putstr("spex-console:> ", ctx);
+		console_putstr(prompt, ctx);
 	}
 }
 
 void init_shell(uint8_t* ctx)
 {
-		console_putstr("spex-console:> ", ctx);
+		console_putstr(prompt, ctx);
 }
