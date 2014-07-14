@@ -60,21 +60,22 @@ void k_main(multiboot_t *mboot_ptr)
 	
 	uint8_t* console_ptr = (uint8_t*) (0xD0000000 + ((21) * scr_pitch));
 
-	/*drawString(5, 5, "specyOS v0.0.2", 0x33ADFF, 8, 0, scr_ptr);
+	//drawString(5, 5, "specyOS v0.0.2", 0x33ADFF, 8, 0, scr_ptr);
 	//drawString(5+8*8, 5, "", 0xFFFFFF, 8, 0, scr_ptr);
-
+    /*
 	drawString(5+10, 5+32, "Installed Global Descriptor Tables", 0xffffff, 8, 0, scr_ptr);
 	drawString(5+10, 5+48, "Installed Interrupt Descriptor Tables", 0xffffff, 8, 0, scr_ptr);
 	drawString(5+10, 5+64, "Initialised Paging", 0xffffff, 8, 0, scr_ptr);
 	drawString(5+10, 800-16-5, "Teston", 0xffffff, 8, 0, scr_ptr);*/
-	init_console();
-	int i;
-	for (i=0; i<160*25; i++)
-		console_putstr("te", scr_ptr);
-	console_putstr("rip ne's bingas\n", scr_ptr);
-	console_putstr("and cal's future", scr_ptr);
+	init_console(scr_ptr);
+	console_putstr("specyOS v0.0.2\nType help for a list of commands\n\n", scr_ptr);
+	//for (i=0; i<160*25; i++)
+	//	console_putstr("te", scr_ptr);
+	//console_putstr("rip ne's bingas\n", scr_ptr);
+	//console_putstr("and cal's future", scr_ptr);
 
 	init_kbd();
+	init_shell(scr_ptr);
 
 	//scroll(scr_ptr);
 	asm volatile ("sti");

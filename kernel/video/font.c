@@ -178,235 +178,288 @@ void getfontchar(unsigned char character)
 	{
          case 'A':
             font = font_8x8_A;
-         	break;
+            break;
          case 'B':
             font = font_8x8_B;
-         	break;
+            break;
          case 'C':
             font = font_8x8_C;
-         	break;
+            break;
          case 'D':
             font = font_8x8_D;
-         	break;
+            break;
          case 'E':
             font = font_8x8_E;
-         	break;
+            break;
          case 'F':
             font = font_8x8_F;
-         	break;
+            break;
          case 'G':
             font = font_8x8_G;
-         	break;
+            break;
          case 'H':
             font = font_8x8_H;
-         	break;
+            break;
          case 'I':
             font = font_8x8_I;
-         	break;
+            break;
          case 'J':
             font = font_8x8_J;
-         	break;
+            break;
          case 'K':
             font = font_8x8_K;
-         	break;
+            break;
          case 'L':
             font = font_8x8_L;
-         	break;
+            break;
          case 'M':
             font = font_8x8_M;
-         	break;
+            break;
          case 'N':
             font = font_8x8_N;
-         	break;
+            break;
          case 'O':
             font = font_8x8_O;
-         	break;
+            break;
          case 'P':
             font = font_8x8_P;
-         	break;
+            break;
          case 'Q':
             font = font_8x8_Q;
-         	break;
+            break;
          case 'R':
             font = font_8x8_R;
-         	break;
+            break;
          case 'S':
             font = font_8x8_S;
-         	break;
+            break;
          case 'T':
             font = font_8x8_T;
-         	break;
+            break;
          case 'U':
             font = font_8x8_U;
-         	break;
+            break;
          case 'V':
             font = font_8x8_V;
-         	break;
+            break;
          case 'W':
             font = font_8x8_W;
-         	break;
+            break;
          case 'X':
             font = font_8x8_X;
-         	break;
+            break;
          case 'Y':
             font = font_8x8_Y;
-         	break;
+            break;
          case 'Z':
             font = font_8x8_Z;
-         	break;
+            break;
          case 'a':
             font = font_8x8_a;
-         	break;
+            break;
          case 'b':
             font = font_8x8_b;
-         	break;
+            break;
          case 'c':
             font = font_8x8_c;
-         	break;
+            break;
          case 'd':
             font = font_8x8_d;
-         	break;
+            break;
          case 'e':
             font = font_8x8_e;
-         	break;
+            break;
          case 'f':
             font = font_8x8_f;
-         	break;
+            break;
          case 'g':
             font = font_8x8_g;
-         	break;
+            break;
          case 'h':
             font = font_8x8_h;
-         	break;
+            break;
          case 'i':
             font = font_8x8_i;
-         	break;
+            break;
          case 'j':
             font = font_8x8_j;
-         	break;
+            break;
          case 'k':
             font = font_8x8_k;
-         	break;
+            break;
          case 'l':
             font = font_8x8_l;
-         	break;
+            break;
          case 'm':
             font = font_8x8_m;
-         	break;
+            break;
          case 'n':
             font = font_8x8_n;
-         	break;
+            break;
          case 'o':
             font = font_8x8_o;
-         	break;
+            break;
          case 'p':
             font = font_8x8_p;
-         	break;
+            break;
          case 'q':
             font = font_8x8_q;
-         	break;
+            break;
          case 'r':
             font = font_8x8_r;
-         	break;
+            break;
          case 's':
             font = font_8x8_s;
-         	break;
+            break;
          case 't':
             font = font_8x8_t;
-         	break;
+            break;
          case 'u':
             font = font_8x8_u;
-         	break;
+            break;
          case 'v':
             font = font_8x8_v;
-         	break;
+            break;
          case 'w':
             font = font_8x8_w;
-         	break;
+            break;
          case 'x':
             font = font_8x8_x;
-         	break;
+            break;
          case 'y':
             font = font_8x8_y;
-         	break;
+            break;
          case 'z':
             font = font_8x8_z;
-         	break;
+            break;
          case '0':
             font = font_8x8_0;
-         	break;
+            break;
          case '1':              
             font = font_8x8_1;
-         	break;
+            break;
          case '2':
             font = font_8x8_2;
-         	break;
+            break;
          case '3':
             font = font_8x8_3;
-         	break;
+            break;
          case '4':
             font = font_8x8_4;
-         	break;
+            break;
          case '5':
             font = font_8x8_5;
-         	break;
+            break;
          case '6':
             font = font_8x8_6;
-         	break;
+            break;
          case '7':
             font = font_8x8_7;
-         	break;
+            break;
          case '8':
             font = font_8x8_8;
-         	break;
+            break;
          case '9':
             font = font_8x8_9;
-         	break;
+            break;
          case ' ':
             font = font_8x8_space;
-         	break;
+            break;
          case '@':
             font = font_8x8_at;
-         	break;
+            break;
          case '.':
             font = font_8x8_period;
-         	break;
+            break;
          case '[':
             font = font_8x8_left_square_brace;
-         	break;
+            break;
          case ']':
             font = font_8x8_right_square_brace;
-         	break;
+            break;
          case '$':
             font = font_8x8_dollar;
-         	break;
+            break;
          case '!':
             font = font_8x8_exclamation_mark;
-         	break;
-     /*    case '\n':
-         //     g_csr_y+=10;
-         //     g_csr_x=0;
-         //     g_csr_x-=9;
-         //     shell_csr_y+=10;
-         //     shell_csr_x=1;
-         //     shell_csr_x-=9;
-         //   font = font_8x8_space;
-         	break;
-         case '\b':
-          //    if(shell_csr_x - 9 < 1 || g_csr_x - 9 < 1){
-          //    }else{
-          //         g_csr_x-=9;
-          //         shell_csr_x-=9;
-              }
-            font = font_8x8_bspace;
-         	break;
-         case '\t':
-        //      shell_csr_x+=64;
-        //     g_csr_x+=0;
-        //  font = font_8x8_bspace;
-         	break;
-         default:
-            font = font_8x8_question_mark;//Question mark for unknown
-         	break;*/
+            break;
+         case '`':
+			font = font_8x8_backtick;
+			break;
+		 case '+':
+		    font = font_8x8_plus;
+			break;
+		 case '-':
+		    font = font_8x8_minus;
+			break;
+		 case '~':
+		    font = font_8x8_tilde;
+			break;
+		 case '#':
+		    font = font_8x8_hash;
+			break;
+		 case '%':
+		    font = font_8x8_pcent;
+			break;			
+		 case '^':
+		    font = font_8x8_caret;
+			break;			
+		 case '&':
+		    font = font_8x8_and;
+			break;			
+		 case '*':
+		    font = font_8x8_asterix;
+			break;
+		 case '(':
+		    font = font_8x8_lbrack;
+			break;
+		 case ')':
+		    font = font_8x8_rbrack;
+			break;
+		 case '_':
+		    font = font_8x8_underscore;
+			break;
+		 case '=':
+		    font = font_8x8_equal;
+			break;
+		 case ';':
+		    font = font_8x8_semicolon;
+			break;
+		 case '\'':
+		    font = font_8x8_apostrophe;
+			break;
+		 case '\\':
+		    font = font_8x8_bslash;
+			break;
+		 case ',':
+		    font = font_8x8_comma;
+			break;
+		 case '{':
+		    font = font_8x8_lcbrace;
+			break;
+		 case '}':
+		    font = font_8x8_rcbrace;
+			break;
+		 case '/':
+		    font = font_8x8_fslash;
+			break;
+		 case ':':
+		    font = font_8x8_colon;
+			break;
+		 case '"':
+		    font = font_8x8_quot;
+			break;
+		 case '|':
+		    font = font_8x8_pipe;
+			break;
+		 case '<':
+		    font = font_8x8_lthan;
+			break;
+		 case '>':
+		    font = font_8x8_gthan;
+			break;
+		 case '?':
+		    font = font_8x8_question_mark;
+			break;
     }
 }
