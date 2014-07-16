@@ -6,6 +6,7 @@
  */
 
 #include <system.h>
+#include <compositor.h>
 
 #define FONT_X 8
 #define FONT_Y 16
@@ -15,6 +16,8 @@
 extern uint16_t scr_height;
 extern uint16_t scr_width;
 extern uint16_t scr_pitch;
+
+extern int mouseX, mouseY;
 
 uint16_t row, col = 0;
 uint16_t row_max;
@@ -132,6 +135,37 @@ void console_putstr(char *string, uint8_t* ctx)
 	}
 }
 
+void console_putstr_dec(uint32_t n, uint8_t* ctx)
+{
+
+    if (n == 0)
+    {
+        console_putch('0', ctx);
+        return;
+    }
+
+    int acc = n;
+    char c[32];
+    int i = 0;
+    while (acc > 0)
+    {
+        c[i] = '0' + acc % 10;
+        acc /= 10;
+        i++;
+    }
+    c[i] = 0;
+
+    char c2[32];
+    c2[i--] = 0;
+    int j = 0;
+    while(i >= 0)
+    {
+        c2[i--] = c[j++];
+    }
+    console_putstr(c2, ctx);
+
+}
+
 void console_getch(char c)
 {
 	if (c == '\n') {
@@ -147,12 +181,30 @@ void console_getch(char c)
 void shell_handle(char c, uint8_t* ctx)
 {
 	if (c == '\n') {
-		console_putstr("", ctx);
-		console_putstr(input, ctx);
-		console_putstr(": command not found\n", ctx);
-		console_putstr("\n", ctx);
-		console_putstr(prompt, ctx);
+		if (strcmp("help", input) == 0) {
+			console_putstr("Currently supported commands: help, clear, mouse, xinit\n\n", ctx);
+			console_putstr(prompt, ctx);
+		}
+		
+		else if (strcmp("clear", input) == 0) {
+			clear(ctx);
+			row = 0;
+			console_putstr(prompt, ctx);
+
+		}
+		
+		else if (strcmp("xinit", input) == 0) {
+			init_mouse();
+			init_compositor(ctx);
+		}
+		
+		else {
+			console_putstr(input, ctx);
+			console_putstr(": command not found\n\n", ctx);
+			console_putstr(prompt, ctx);
+		}		
 	}
+	
 }
 
 void init_shell(uint8_t* ctx)

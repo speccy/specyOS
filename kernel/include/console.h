@@ -15,6 +15,9 @@ void clear(uint8_t* ctx);
 void scroll(uint8_t* ctx);
 void console_putch(char c, uint8_t* ctx);
 void console_putstr(char *string, uint8_t* ctx);
+
+void console_putstr_dec(uint32_t n, uint8_t* ctx);
+
 void console_getch(char c);
 
 void console_putch_wrapper(char c, uint8_t* ctx);

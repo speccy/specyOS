@@ -28,7 +28,7 @@ mboot:
 	dd 0x00000000 ; 0 = linear graphics
 	dd 1280
 	dd 800
-	dd 32 ; Set me to 32 or else.
+	dd 32 
 
 [GLOBAL start]                  ; Kernel entry point.
 [EXTERN k_main]                   

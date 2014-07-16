@@ -122,6 +122,7 @@ void drawString(int x, int y, char *string, int color, int fontSize, int tall, u
 void drawChar(int x, int y, unsigned char character, int fill, uint8_t* ctx);
 
 void init_kbd();
+void init_mouse();
 
 
 

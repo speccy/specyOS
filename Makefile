@@ -13,7 +13,7 @@ DEV_SRC = $(patsubst %.c, %.o, $(wildcard kernel/devices/*.c))
 MEM_SRC = $(patsubst %.c, %.o, $(wildcard kernel/mem/*.c))
 
 
-CFLAGS = -I./kernel/include -std=gnu99 -ffreestanding -O2 -Wall -Wextra 
+CFLAGS = -I./kernel/include -std=gnu99 -ffreestanding -O2 -Wall -Wextra -g 
 LDFLAGS = -ffreestanding -o2 -nostdlib
 
 all: 	loader spex-kern cpu video devices memory

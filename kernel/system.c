@@ -25,9 +25,9 @@ void outb(unsigned short port, unsigned char data) {
 }
 
 unsigned char inb(unsigned short port) {
-	unsigned char rv;
-	asm volatile ("inb %1, %0" : "=a" (rv) : "dN" (port));
-	return rv;
+	unsigned char ret;
+	asm volatile ("inb %1, %0" : "=a" (ret) : "dN" (port));
+	return ret;
 }
 
 int strcmp(char *string1, char *string2)
