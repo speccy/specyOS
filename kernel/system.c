@@ -8,14 +8,30 @@
 #include <system.h>
 #include <screen.h>
 
-void * memset(void * dest, int val, size_t count) 
+void* memset(void* dest, int val, size_t count) 
 {
 	asm volatile ("cld; rep stosb" : "+c" (count), "+D" (dest) : "a" (val) : "memory");
 	return dest;
 }
 
-void * memcpy(void * restrict dest, const void * restrict src, size_t count) {
+void* memcpy(void* restrict dest, const void* restrict src, size_t count) {
 	asm volatile ("cld; rep movsb" : "+c" (count), "+S" (src), "+D" (dest) :: "memory");
+	return dest;
+}
+
+void* memmove(void* dest, const void* src, size_t count) {
+	size_t i;
+	unsigned char *a = dest;
+	const unsigned char *b = src;
+	if (src < dest) {
+		for ( i = count; i > 0; --i) {
+			a[i-1] = b[i-1];
+		}
+	} else {
+		for ( i = 0; i < count; ++i) {
+		a[i] = b[i];
+		}
+	}
 	return dest;
 }
 

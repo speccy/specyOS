@@ -6,11 +6,17 @@
  */
  
 #include <system.h>
-#include <console.h>
+
+#define MAX_HANDLERS 32
 
 extern uint8_t* scr_ptr;
 
-int shift_flag;
+int shift_flag, i;
+
+kb_handler_t kb_handler[MAX_HANDLERS];
+
+uint8_t kb_handlers = 0;
+
 
 unsigned char layout[128];
 
@@ -39,7 +45,7 @@ unsigned char shift_keys[128] =
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 };
 
-void keyboard_handler(struct regs *r)
+void keyboard_handler(registers_t *r)
 {
     unsigned char scancode;
 
@@ -56,16 +62,34 @@ void keyboard_handler(struct regs *r)
 	    }
 	    
 	    if (shift_flag == 1) {
-			console_putch_wrapper(shift_keys[scancode], scr_ptr);
-			console_getch(shift_keys[scancode]);
-			shell_handle(shift_keys[scancode], scr_ptr);
+			memcpy(layout, shift_keys, sizeof(layout));
 		}
 		else {
-			console_putch_wrapper(keys[scancode], scr_ptr);
-			console_getch(keys[scancode]);
-			shell_handle(shift_keys[scancode], scr_ptr);
+			memcpy(layout, keys, sizeof(layout));
+		}
+		
+		for (i = 0; i < kb_handlers; i++) {
+			kb_handler_t handler = kb_handler[i];
+			handler(layout[scancode]);
 		}
     }
+}
+
+void del_kb_handler(kb_handler_t handler)
+{
+	for (i = 0; i < kb_handlers; i++) {
+		if (kb_handler[i] == handler)
+			memmove(&kb_handler[i], &kb_handler[i+1], (sizeof(kb_handler[i]) * (kb_handlers - i)));
+			kb_handlers--;
+	}
+}
+
+void add_kb_handler(kb_handler_t handler)
+{
+	if (kb_handlers != MAX_HANDLERS) {
+		kb_handler[kb_handlers] = handler;
+		kb_handlers++;
+	}
 }
 
 void init_kbd()

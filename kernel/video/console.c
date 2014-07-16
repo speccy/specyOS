@@ -6,6 +6,7 @@
  */
 
 #include <system.h>
+#include <console.h>
 #include <compositor.h>
 
 #define FONT_X 8
@@ -16,6 +17,8 @@
 extern uint16_t scr_height;
 extern uint16_t scr_width;
 extern uint16_t scr_pitch;
+
+uint8_t* buffer;
 
 extern int mouseX, mouseY;
 
@@ -43,9 +46,14 @@ void init_console(uint8_t* ctx)
 	col = 0;
 	row_max = scr_height / FONT_Y;
 	col_max = scr_width / FONT_X;
+	buffer = ctx;
 	
 	for (x = 0; x < FONT_X; x++) 
 		drawPixel(x, CURSOR_POS, bg_col, ctx); // init cursor at 0,0,
+		
+	add_kb_handler(console_putch_wrapper);
+	add_kb_handler(console_getch);
+	add_kb_handler(shell_handle);
 }
 
 void clear(uint8_t* ctx)
@@ -120,11 +128,11 @@ void console_putch(char c, uint8_t* ctx)
 	}
 }
 
-void console_putch_wrapper(char c, uint8_t* ctx)
+void console_putch_wrapper(char c)
 {
 	if (col <= 15)
 		col = 15;
-	console_putch(c, ctx);
+	console_putch(c, buffer);
 }
 
 void console_putstr(char *string, uint8_t* ctx)
@@ -178,30 +186,34 @@ void console_getch(char c)
 	}
 }
 
-void shell_handle(char c, uint8_t* ctx)
+void shell_handle(char c)
 {
 	if (c == '\n') {
 		if (strcmp("help", input) == 0) {
-			console_putstr("Currently supported commands: help, clear, mouse, xinit\n\n", ctx);
-			console_putstr(prompt, ctx);
+			console_putstr("Currently supported commands: help, clear, xinit\n\n", buffer);
+			console_putstr(prompt, buffer);
 		}
 		
 		else if (strcmp("clear", input) == 0) {
-			clear(ctx);
+			clear(buffer);
 			row = 0;
-			console_putstr(prompt, ctx);
+			console_putstr(prompt, buffer);
 
 		}
 		
 		else if (strcmp("xinit", input) == 0) {
+			del_kb_handler(console_putch_wrapper);
+			del_kb_handler(console_getch);
+			del_kb_handler(shell_handle);
+
 			init_mouse();
-			init_compositor(ctx);
+			init_compositor(buffer);
 		}
 		
 		else {
-			console_putstr(input, ctx);
-			console_putstr(": command not found\n\n", ctx);
-			console_putstr(prompt, ctx);
+			console_putstr(input, buffer);
+			console_putstr(": command not found\n\n", buffer);
+			console_putstr(prompt, buffer);
 		}		
 	}
 	

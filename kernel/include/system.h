@@ -13,8 +13,10 @@
 #include <screen.h>
 #include <timer.h>
 
-void * memset(void * dest, int val, size_t count);
-void * memcpy(void * restrict dest, const void * restrict src, size_t count);
+void* memset(void* dest, int val, size_t count);
+void* memcpy(void* restrict dest, const void* restrict src, size_t count);
+void* memmove(void* dest, const void* src, size_t count);
+
 
 void outb(unsigned short port, unsigned char data);
 unsigned char inb(unsigned short port);
@@ -121,7 +123,12 @@ void drawPixel(int x, int y, int RGB, uint8_t* ctx);
 void drawString(int x, int y, char *string, int color, int fontSize, int tall, uint8_t* ctx);
 void drawChar(int x, int y, unsigned char character, int fill, uint8_t* ctx);
 
+// keyboard
+typedef void (*kb_handler_t)(uint8_t layout);
 void init_kbd();
+void add_kb_handler(kb_handler_t handler);
+void del_kb_handler(kb_handler_t handler);
+
 void init_mouse();
 
 

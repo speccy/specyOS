@@ -18,12 +18,10 @@ void console_putstr(char *string, uint8_t* ctx);
 
 void console_putstr_dec(uint32_t n, uint8_t* ctx);
 
+//kb handlers
 void console_getch(char c);
-
-void console_putch_wrapper(char c, uint8_t* ctx);
-
-void shell_handle(char c, uint8_t* ctx);
-
+void console_putch_wrapper(char c);
+void shell_handle(char c);
 
 void init_shell(uint8_t* ctx);
 
