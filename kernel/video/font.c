@@ -7,29 +7,13 @@
 
 #include <system.h>
 #include <8x8.h>
-#include <screen.h>
+#include <graphics.h>
 
 extern uint16_t scr_height;
 extern uint16_t scr_width;
 extern uint16_t scr_pitch;
 
 char* font;
-
-void drawPixel(int x, int y, int RGB, uint8_t* ctx)
-{
-  if (x > scr_width)
-      x = scr_width;
-  if (y > scr_height)
-      y = scr_height;
-  /*calculates the offset for a specific point on screen*/
-  
-  int offset = x * (32 / 8) + y * (scr_width * (32 / 8));
-
-  ctx[offset + 0] = RGB & 0xff;           //BLUE
-  ctx[offset + 1] = (RGB >> 8) & 0xff;    //GREEN
-  ctx[offset + 2] = (RGB >> 16) & 0xff;   //RED
-
-}
 
 void drawChar(int x, int y, unsigned char character, int fill, uint8_t* ctx)
 {

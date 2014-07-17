@@ -69,5 +69,5 @@ page_t *get_page(uint32_t address, int make, page_directory_t *dir);
 **/
 void page_fault(registers_t *regs); 
 
-uint32_t pageMem(uint32_t real_addr, uint32_t fb_length);
+uint32_t pageMem(uint32_t virt_addr, uint32_t real_addr, uint32_t fb_length);
 #endif

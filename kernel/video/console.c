@@ -14,6 +14,8 @@
 
 #define CURSOR_POS 14
 
+extern uint32_t mem_size;
+
 extern uint16_t scr_height;
 extern uint16_t scr_width;
 extern uint16_t scr_pitch;
@@ -47,6 +49,8 @@ void init_console(uint8_t* ctx)
 	row_max = scr_height / FONT_Y;
 	col_max = scr_width / FONT_X;
 	buffer = ctx;
+	
+	clear(ctx);
 	
 	for (x = 0; x < FONT_X; x++) 
 		drawPixel(x, CURSOR_POS, bg_col, ctx); // init cursor at 0,0,
@@ -174,6 +178,47 @@ void console_putstr_dec(uint32_t n, uint8_t* ctx)
 
 }
 
+void console_putstr_hex(uint32_t n, uint8_t* ctx)
+{
+    signed int val;
+
+    console_putstr("0x", ctx);
+
+    char noz = 1;
+
+    int i;
+    for (i = 28; i > 0; i -= 4)
+    {
+        val = (n >> i) & 0xF;
+        if (val == 0 && noz != 0)
+        {
+            continue;
+        }
+    
+        if (val >= 0xA)
+        {
+            noz = 0;
+            console_putch(val - 0xA + 'a', ctx);
+        }
+        else
+        {
+            noz = 0;
+            console_putch(val + '0', ctx);
+        }
+    }
+  
+    val = n & 0xF;
+    if (val >= 0xA)
+    {
+        console_putch(val - 0xA + 'a', ctx);
+    }
+    else
+    {
+        console_putch(val + '0', ctx);
+    }
+
+}
+
 void console_getch(char c)
 {
 	if (c == '\n') {
@@ -190,7 +235,7 @@ void shell_handle(char c)
 {
 	if (c == '\n') {
 		if (strcmp("help", input) == 0) {
-			console_putstr("Currently supported commands: help, clear, xinit\n\n", buffer);
+			console_putstr("Currently supported commands: help, clear, memsize, xinit\n\n", buffer);
 			console_putstr(prompt, buffer);
 		}
 		
@@ -198,7 +243,21 @@ void shell_handle(char c)
 			clear(buffer);
 			row = 0;
 			console_putstr(prompt, buffer);
+		}
+		
+		else if (strcmp("memsize", input) == 0) {
+			console_putstr("Memory Size: ", buffer);
+			console_putstr_dec(mem_size / 1024, buffer);
+			console_putstr(" kB\n\n", buffer);
 
+			console_putstr(prompt, buffer);
+		}
+		
+		else if (strcmp("malloc", input) == 0) {
+			console_putstr_hex(kmalloc(32), buffer);
+			console_putstr("\n\n", buffer);
+
+			console_putstr(prompt, buffer);
 		}
 		
 		else if (strcmp("xinit", input) == 0) {
@@ -208,6 +267,10 @@ void shell_handle(char c)
 
 			init_mouse();
 			init_compositor(buffer);
+		}
+		
+		else if (strcmp("", input) == 0) {
+			console_putstr(prompt, buffer);
 		}
 		
 		else {

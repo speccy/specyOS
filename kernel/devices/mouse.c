@@ -50,11 +50,11 @@ void mouse_handler(struct regs *r)
 			if (mouseY <= -scr_height/2) mouseY = -scr_height/2;
 			
 			if (mouse_bytes[0] & 0x4)
-				drawString(10,100,"Middle button\n\n", 0x000000, 8, 0, scr_ptr);
+				drawString(10,100,"Middle button", 0x000000, 8, 0, scr_ptr);
 			if (mouse_bytes[0] & 0x2)
-				drawString(10,200,"Right button\n\n", 0x000000, 8, 0, scr_ptr);
+				drawString(10,200,"Right button", 0x000000, 8, 0, scr_ptr);
 			if (mouse_bytes[0] & 0x1)
-				drawString(10,300,"Left button\n\n", 0x000000, 8, 0, scr_ptr);
+				drawString(10,300,"Left button", 0x000000, 8, 0, scr_ptr);
 			
 			drawCursor(mouseX,mouseY,ghostX,ghostY, scr_ptr);
 			ghostX = mouseX;

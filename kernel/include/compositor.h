@@ -11,7 +11,7 @@
 #include <system.h>
 
 void init_compositor(uint8_t* ctx);
+
 void drawCursor(signed int mouseX,signed int mouseY, int ghostX, int ghostY, uint8_t* ctx);
-void drawRect(int x, int y, int width, int height, int fill, uint8_t* ctx);
 
 #endif 

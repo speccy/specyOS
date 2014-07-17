@@ -8,6 +8,7 @@
 #include <system.h>
 #include <paging.h>
 #include <kheap.h>
+#include <console.h>
 
 // The kernel's page directory
 page_directory_t *kernel_directory=0;
@@ -18,6 +19,8 @@ page_directory_t *current_directory=0;
 extern uint32_t fb;
 extern uint16_t  scr_height;
 extern uint16_t  scr_pitch;
+extern uint8_t*  scr_ptr;
+
 
 // A bitset of frames - used or free.
 uint32_t *frames;
@@ -41,7 +44,7 @@ static void set_frame(uint32_t frame_addr)
    frames[idx] |= (0x1 << off);
 }
 
-uint32_t pageMem(uint32_t real_addr, uint32_t fb_length)
+uint32_t pageMem(uint32_t virt_addr, uint32_t real_addr, uint32_t fb_length)
 {
 	int i = 0;
 	uint32_t fb_addr;
@@ -51,7 +54,7 @@ uint32_t pageMem(uint32_t real_addr, uint32_t fb_length)
 	fb_length &= 0x0FFFF000;
 	
 	// Map enough framebuffer
-	for(i = 0xD0000000; i < 0xD0000000 + fb_length; i += 0x1000) {
+	for(i = virt_addr; i < virt_addr + fb_length; i += 0x1000) {
 		page_t* page = get_page(i, 1, kernel_directory);
 		
 		fb_addr = (i & 0x0FFFF000) + real_addr;
@@ -61,7 +64,7 @@ uint32_t pageMem(uint32_t real_addr, uint32_t fb_length)
 		page->user = 1;
 		page->frame = fb_addr >> 12;
 	}
-	return 0xD0000000;
+	return virt_addr;
 }
 // Static function to clear a bit in the frames bitset
 static void clear_frame(uint32_t frame_addr)
@@ -160,13 +163,13 @@ void initialise_paging(uint32_t memorySize, uint32_t fba)
 	//if(fba)
 		//init_timer (0);
 			
-   uint32_t test = pageMem(fba, scr_height*scr_pitch);
+   uint32_t test = pageMem(0xD0000000, fba, scr_height*scr_pitch*2);
    //memset((void*)fba, 0xFF, 4000000);
-   /*terminal_writestring_hex(test);
+   /*console_putstr_hex(test);
    uint32_t *ptr = (uint32_t*)0xD0000000;
    uint32_t do_page_fault = *ptr;
-    terminal_writestring("\n");
-   terminal_writestring_dec(do_page_fault);*/
+    console_putstr("\n");
+   console_putstr_dec(do_page_fault);*/
    
    
    // We need to identity map (phys addr = virt addr) from
@@ -239,14 +242,14 @@ void page_fault(registers_t * regs)
    int id = regs->err_code & 0x10;          // Caused by an instruction fetch?
 
    // Output an error message.
-   terminal_writestring("Page fault! ( ");
-   if (present) {terminal_writestring("present ");}
-   if (rw) {terminal_writestring("read-only ");}
-   if (us) {terminal_writestring("user-mode ");}
-   if (reserved) {terminal_writestring("reserved ");}
-   terminal_writestring(") at 0x");
-   terminal_writestring_hex(faulting_address);
-   terminal_writestring("\n");
+   console_putstr("Page fault! ( ", scr_ptr);
+   if (present) {console_putstr("present ", scr_ptr);}
+   if (rw) {console_putstr("read-only ", scr_ptr);}
+   if (us) {console_putstr("user-mode ", scr_ptr);}
+   if (reserved) {console_putstr("reserved ", scr_ptr);}
+   console_putstr(") at ", scr_ptr);
+   console_putstr_hex(faulting_address, scr_ptr);
+   console_putstr("\n", scr_ptr);
    //PANIC("Page fault");
    for(;;);
 } 
