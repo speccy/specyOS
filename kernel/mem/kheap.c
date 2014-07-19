@@ -6,9 +6,13 @@
  */
  
 #include <kheap.h>
+#include <paging.h>
 
 // end is defined in the linker script.
 extern uint32_t end;
+
+extern page_directory_t * kernel_directory;
+
 uint32_t placement_address = (uint32_t)&end;
 
 uint32_t kmalloc_int(uint32_t sz, int align, uint32_t *phys)
@@ -29,6 +33,7 @@ uint32_t kmalloc_int(uint32_t sz, int align, uint32_t *phys)
     }
     uint32_t tmp = placement_address;
     placement_address += sz;
+
     return tmp;
 }
 
