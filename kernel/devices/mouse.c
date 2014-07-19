@@ -6,15 +6,27 @@
  */
 
 #include <system.h>
+#include <compositor.h>
 
 extern uint8_t* scr_ptr;
 uint16_t scr_height;
 uint16_t scr_width;
 
+extern uint8_t* backbuffer;
+
+extern uint32_t* win_read;
+
+extern window_t console;
+
 signed int mouseX, mouseY =0;
 signed char mx, my;
 int ghostX = 0;
 int ghostY = 0;
+
+int ghostwX;
+int ghostwY;
+
+int bitcheck = 0;
 
 int x,y; 
 unsigned char mouse_cycle = 0;
@@ -24,6 +36,7 @@ char mouse_bytes[3];
 
 void mouse_handler(struct regs *r)
 {
+	
 	switch(mouse_cycle)
 	{
 		case 0:
@@ -57,8 +70,42 @@ void mouse_handler(struct regs *r)
 				drawString(10,300,"Left button", 0x000000, 8, 0, scr_ptr);
 			
 			drawCursor(mouseX,mouseY,ghostX,ghostY, scr_ptr);
+			
+			int bit;
+			if (
+				mouse_bytes[0] & 0x1 && mouseX > console.x-scr_width/2 && 
+				mouseX < (console.x+console.width)-scr_width/2 && 
+				mouseY > console.y-scr_height/2 && 
+				mouseY < (console.y+console.height)-scr_height/2 &&
+				bitcheck % 4 == 0
+				){ 
+				
+				drawString(10,400,"inside win", 0x000000, 8, 0, scr_ptr);
+				bit = 1;
+				//readBuffer(console.x, console.y, console.width, console.height, win_store);
+				
+				console.x = mouseX+console.width/2;
+				console.y = mouseY+console.height/2;
+				
+				drawRect(ghostwX, ghostwY, console.width, console.height, 0xc41f42, scr_ptr);
+				
+				writeBuffer(console.x, console.y, console.width, console.height, (uint32_t*)console.data);
+				
+			} 
+			else {
+				drawString(10,400,"inside win", 0xc41f42, 8, 0, scr_ptr);
+			}
+			
+
+			
+
 			ghostX = mouseX;
 			ghostY = mouseY;
+			
+			ghostwX = console.x;
+			ghostwY = console.y;
+			
+			bitcheck++;
 			break;
 	} 
 }
