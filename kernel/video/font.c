@@ -6,6 +6,7 @@
  */
 
 #include <system.h>
+#include <compositor.h>
 #include <8x8.h>
 #include <graphics.h>
 
@@ -84,8 +85,9 @@ void drawString(int x, int y, char *string, int color, int fontSize, int tall, u
     x = x + moveX;
   }
 }
-/*
-void writeChar(int x, int y, unsigned char character, int fill, door_t ctx)
+
+
+void writeChar(int x, int y, unsigned char character, int fill, window_t ctx)
 {
 	int i, l;
 	int j = x;
@@ -94,7 +96,7 @@ void writeChar(int x, int y, unsigned char character, int fill, door_t ctx)
 	
 	getfontchar(character);
 	
-	for (l = 0; l < 8; l++)
+	for (l = 0; l < 16; l++)
 	{
 		for (i = 8; i > 0; i--)
 		{
@@ -111,7 +113,7 @@ void writeChar(int x, int y, unsigned char character, int fill, door_t ctx)
 
 }
 
-void writeCharLong(int x, int y, unsigned char character, int fill, door_t ctx)
+void writeCharLong(int x, int y, unsigned char character, int fill, window_t ctx)
 {
 	int i, l, p;
 	int j = x;
@@ -139,9 +141,9 @@ void writeCharLong(int x, int y, unsigned char character, int fill, door_t ctx)
 }
 }
 
-void writeString(int x, int y, char *string, int color, int fontSize, int tall, door_t ctx)
+void writeString(int x, int y, char *string, int color, int fontSize, int tall, window_t ctx)
 {
-  int length = k_strlen(string), moveX = fontSize;
+  int length = strlen(string), moveX = fontSize;
 
   int a;
   for(a = 0; a < length; a++)
@@ -155,7 +157,7 @@ void writeString(int x, int y, char *string, int color, int fontSize, int tall, 
   }
 }
 
-*/
+
 void getfontchar(unsigned char character)
 {
     switch(character)

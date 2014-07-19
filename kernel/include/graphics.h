@@ -10,12 +10,17 @@
 
 #include <system.h>
 
-unsigned long int getPixCol(int x, int y);
+unsigned long int getPixCol(int x, int y, uint8_t* ctx);
 
 void drawPixel(int x, int y, int RGB, uint8_t* ctx);
 void drawRect(int x, int y, int width, int height, int fill, uint8_t* ctx);
-long storePixmap(int x, int y, int width, int height);
+long storePixmap(int x, int y, int width, int height, uint8_t* ctx);
 void drawPixmap(int x, int y, int width, int height, long *pixmap, uint8_t* ctx);
+
+void writeBuffer(int x, int y, int width, int height, uint32_t* buffer);
+void writePixel(int x, int y, int width, int height, int fill, uint32_t* ctx);
+void readBuffer(int x, int y, int width, int height, uint32_t* buffer);
+
 
 
 #endif

@@ -9,8 +9,6 @@
 
 #define MAX_HANDLERS 32
 
-extern uint8_t* scr_ptr;
-
 int shift_flag, i;
 
 kb_handler_t kb_handler[MAX_HANDLERS];

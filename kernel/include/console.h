@@ -9,8 +9,9 @@
 #define CONSOLE
 
 #include <system.h>
+#include <compositor.h>
 
-void init_console(uint8_t* ctx);
+void init_console(window_t window);
 void clear(uint8_t* ctx);
 void scroll(uint8_t* ctx);
 void console_putch(char c, uint8_t* ctx);

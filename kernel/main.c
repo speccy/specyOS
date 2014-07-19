@@ -12,6 +12,7 @@
 #include <kheap.h>
 #include <multiboot.h>
 #include <console.h>
+#include <compositor.h>
 
 multiboot_t *sys_multiboot_info;
 uint32_t mem_size;
@@ -21,7 +22,7 @@ uint16_t scr_width;
 uint16_t scr_pitch;
 
 uint8_t* fbb;
-uint8_t* scr_ptr = (uint8_t*) 0xD0000000;
+uint8_t* scr_ptr;
 
 
 void k_main(multiboot_t *mboot_ptr)
@@ -38,19 +39,23 @@ void k_main(multiboot_t *mboot_ptr)
 	scr_height = (uint16_t )((vbe_info_t *)(mboot_ptr->vbe_mode_info))->Yres;
 	scr_width = (uint16_t )((vbe_info_t *)(mboot_ptr->vbe_mode_info))->Xres;
 		
-	initialise_paging(mem_size, fbb);
+	//init_paging(mem_size);
+	scr_ptr = fbb;
+		
+	window_t screen;
+	screen.name = "screen";
+	screen.x = 0;
+	screen.y = 0;
+	screen.width = scr_width;
+	screen.height = scr_height;
+	screen.data = scr_ptr;
 	
-	//uint8_t* console_ptr = (uint8_t*) (0xD0000000 + ((21) * scr_pitch));
-
-	init_console(scr_ptr);
+	init_console(screen);
+	
 	console_putstr("specyOS v0.0.2\nType help for a list of commands\n\n", scr_ptr);
-	//console_putstr("PhysBase pointer: ", scr_ptr);
-	//console_putstr_hex(&fbb, scr_ptr);
-	
-	//console_putstr("\n\n", scr_ptr);
 
 	init_kbd();
-	init_shell(scr_ptr);
+	init_shell(screen.data);
 
 	asm volatile ("sti");
 }

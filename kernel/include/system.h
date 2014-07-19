@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <screen.h>
 #include <timer.h>
+#include <compositor.h>
 
 void* memset(void* dest, int val, size_t count);
 void* memcpy(void* restrict dest, const void* restrict src, size_t count);
@@ -119,9 +120,6 @@ void gdt_set_gate(size_t num, uint32_t base, uint32_t limit, uint8_t flags, uint
 void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t	flags);
 
 void install_irq_handler(size_t n, irq_handler_t handler);
-
-void drawString(int x, int y, char *string, int color, int fontSize, int tall, uint8_t* ctx);
-void drawChar(int x, int y, unsigned char character, int fill, uint8_t* ctx);
 
 // keyboard
 typedef void (*kb_handler_t)(uint8_t layout);
