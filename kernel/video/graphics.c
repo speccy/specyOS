@@ -32,10 +32,16 @@ void drawPixel(int x, int y, int RGB, uint8_t* ctx)
 void drawRect(int x, int y, int width, int height, int fill, uint8_t* ctx)
 {
   int offset, tmpX = x, tmpY = y;
+  offset = tmpX * (scr_pitch / scr_width) + tmpY * (scr_pitch);
   
-  for(y = tmpY; y < height + tmpY; y++)
-    for(x = tmpX; x < width + tmpX; x++)
-      drawPixel(x, y, fill, ctx);
+  for(y = 0; y < height; y++){
+	    for(x = 0; x < width; x++) {
+	        ctx[offset + x*4+0 + y*scr_pitch] = fill;           //00
+			ctx[offset + x*4+1 + y*scr_pitch] = (fill >> 8) & 0xff;    //BLUE
+			ctx[offset + x*4+2 + y*scr_pitch] = (fill >> 16) & 0xff;   //RED
+			ctx[offset + x*4+3 + y*scr_pitch] = (fill >> 24) & 0xff;    //GREEN
+		}
+	}
 }
 
 unsigned long int getPixCol(int x, int y, uint8_t* ctx)

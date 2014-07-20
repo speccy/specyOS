@@ -32,6 +32,34 @@ int x,y;
 unsigned char mouse_cycle = 0;
 char mouse_bytes[3];
 
+long mouseBox;
+
+long int mousePixmap[400] = 
+{
+  
+  0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  
+  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, 0xffffff, 0xffffff, 0xffffff, 0xffffff, 0xffffff, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0x000000, 0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0x000000, 0xffffff, -2, 0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0x000000, 0xffffff, -2, -2, 0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, 0xffffff, -2, -2, -2, -2, 0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  0xffffff, -2, -2, -2, -2, -2, 0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  -2, -2, -2, -2, -2, -2, -2, 0xffffff, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
+  -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2
+};
+
 //Mouse functions
 
 void mouse_handler(struct regs *r)
@@ -68,26 +96,43 @@ void mouse_handler(struct regs *r)
 				drawString(10,200,"Right button", 0x000000, 8, 0, scr_ptr);
 			if (mouse_bytes[0] & 0x1)
 				drawString(10,300,"Left button", 0x000000, 8, 0, scr_ptr);
-			
-			drawCursor(mouseX,mouseY,ghostX,ghostY, scr_ptr);
-			
+						
 			int bit;
 			if (
 				mouse_bytes[0] & 0x1 && mouseX > console.x-scr_width/2 && 
 				mouseX < (console.x+console.width)-scr_width/2 && 
 				mouseY > console.y-scr_height/2 && 
 				mouseY < (console.y+console.height)-scr_height/2 &&
-				bitcheck % 4 == 0
+				bitcheck % 2 == 0
 				){ 
+					
+				int up, down, left, right = 0;
+
 				
 				drawString(10,400,"inside win", 0x000000, 8, 0, scr_ptr);
 				bit = 1;
 				//readBuffer(console.x, console.y, console.width, console.height, win_store);
 				
-				console.x = mouseX+console.width/2;
-				console.y = mouseY+console.height/2;
+				console.x += x*2;
+				console.y -= y*2;
 				
-				drawRect(ghostwX, ghostwY, console.width, console.height, 0xc41f42, scr_ptr);
+				//drawRect(ghostwX, ghostwY, console.width, console.height, 0xc41f42, scr_ptr);
+				//drawRect(ghostwX, ghostwY, (console.x - ghostwX), console.height, 0xc41f42, scr_ptr);
+				
+				if (console.x - ghostwX > 0) {
+					drawRect(ghostwX, ghostwY, (console.x - ghostwX), console.height, 0xc41f42, scr_ptr);
+				}
+				if (console.x - ghostwX < 0) {
+					drawRect(console.x+console.width, ghostwY, (ghostwX - console.x), console.height, 0xc41f42, scr_ptr);
+				}
+				if (console.y - ghostwY > 0) {
+					drawRect(ghostwX, ghostwY, console.width, (console.y - ghostwY), 0xc41f42, scr_ptr);					
+				}
+				if (console.y - ghostwY < 0) {
+					drawRect(console.x, console.y+console.height, console.width - (console.x - ghostwX), (ghostwY - console.y), 0xc41f42, scr_ptr);
+				}
+				
+				bitcheck = 0;
 				
 				writeBuffer(console.x, console.y, console.width, console.height, (uint32_t*)console.data);
 				
@@ -96,8 +141,7 @@ void mouse_handler(struct regs *r)
 				drawString(10,400,"inside win", 0xc41f42, 8, 0, scr_ptr);
 			}
 			
-
-			
+			drawCursor(mouseX,mouseY,ghostX,ghostY, scr_ptr);			
 
 			ghostX = mouseX;
 			ghostY = mouseY;
@@ -179,5 +223,20 @@ void init_mouse()
 	mouse_write(0xF4);
 	mouse_read();
 	install_irq_handler(44, &mouse_handler);
+}
+
+void drawCursor(signed int mouseX, signed int mouseY, int ghostX, int ghostY, uint8_t* ctx)
+{
+	if (mouseBox == 0){
+		mouseBox = storePixmap(ghostX+scr_width/2,ghostY+scr_height/2,20,20, ctx);
+		drawPixmap(mouseX+scr_width/2, mouseY+scr_height/2, 20, 20, mousePixmap, ctx);
+	}
+	else {
+		drawPixmap(ghostX+scr_width/2,ghostY+scr_height/2,20,20,mouseBox, ctx);
+		mouseBox = storePixmap(mouseX+scr_width/2,mouseY+scr_height/2,20,20, ctx);
+		drawPixmap(mouseX+scr_width/2, mouseY+scr_height/2, 20, 20, mousePixmap, ctx);
+	}
+	//drawRect(ghostX+scr_width/2, ghostY+scr_height/2, 10, 10, 0xc41f42, ctx);
+	//drawRect(mouseX+(scr_width/2), mouseY+(scr_height/2), 10, 10, 0xffffff, ctx);
 }
 

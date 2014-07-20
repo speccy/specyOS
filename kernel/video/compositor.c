@@ -35,35 +35,8 @@ window_t console;
 
 void update_console(char c);
 void keySpawnEnter(char c);
-long mouseBox;
 
 int x, y;
-
-long int mousePixmap[400] = 
-{
-  
-  0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  
-  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xffffff, 0xffffff, 0xffffff, 0xffffff, 0xffffff, 0xffffff, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0x000000, 0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0x000000, 0xffffff, -2, 0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0x000000, 0xffffff, -2, -2, 0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, 0xffffff, -2, -2, -2, -2, 0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  0xffffff, -2, -2, -2, -2, -2, 0xffffff, 0x000000, 0x000000, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  -2, -2, -2, -2, -2, -2, -2, 0xffffff, 0xffffff, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-  -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2
-};
 
 void init_compositor(uint8_t* ctx)
 {
@@ -137,21 +110,6 @@ window_t spawnWindow(char* name, int x, int y, int width, int height, int priori
 	return window;
 }
 
-void drawCursor(signed int mouseX,signed int mouseY, int ghostX, int ghostY, uint8_t* ctx)
-{
-	if (mouseBox == 0){
-		mouseBox = storePixmap(ghostX+scr_width/2,ghostY+scr_height/2,20,20, ctx);
-		drawPixmap(mouseX+scr_width/2, mouseY+scr_height/2, 20, 20, mousePixmap, ctx);
-	}
-	else {
-		drawPixmap(ghostX+scr_width/2,ghostY+scr_height/2,20,20,mouseBox, ctx);
-		mouseBox = storePixmap(mouseX+scr_width/2,mouseY+scr_height/2,20,20, ctx);
-		drawPixmap(mouseX+scr_width/2, mouseY+scr_height/2, 20, 20, mousePixmap, ctx);
-	}
-	//drawRect(ghostX+scr_width/2, ghostY+scr_height/2, 10, 10, 0xc41f42, ctx);
-	//drawRect(mouseX+(scr_width/2), mouseY+(scr_height/2), 10, 10, 0xffffff, ctx);
-}
-
 void update_console(char c)
 {
 	writeBuffer(console.x, console.y, console.width, console.height, console.data);
@@ -160,7 +118,7 @@ void update_console(char c)
 void keySpawnEnter(char c)
 {
 	if (c == ' ' && tab != 1 ) {
-		console = spawnWindow("console", 200, 200, 600, 340, 1, desktop);
+		console = spawnWindow("console", 200, 200, 540, 300, 1, desktop);
 		init_console(console);
 		init_shell(console.data);
 		add_kb_handler(update_console);
