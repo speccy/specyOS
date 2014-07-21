@@ -22,6 +22,8 @@ extern mouseY;
 extern ghostX;
 extern ghostY;
 
+int ghostwX, ghostwY;
+
 int tab = 0;
 
 extern bit;
@@ -37,6 +39,8 @@ void update_console(char c);
 void keySpawnEnter(char c);
 
 int x, y;
+
+int bitcheck = 0;
 
 void init_compositor(uint8_t* ctx)
 {
@@ -119,6 +123,7 @@ void keySpawnEnter(char c)
 {
 	if (c == ' ' && tab != 1 ) {
 		console = spawnWindow("console", 200, 200, 540, 300, 1, desktop);
+		add_mouse_handler(window_movement_handler);
 		init_console(console);
 		init_shell(console.data);
 		add_kb_handler(update_console);
@@ -136,4 +141,39 @@ void winCursor(int mx, int my, window_t window)
 	window.y -= my;
 }
 
-
+void window_movement_handler(click_t click)
+{
+	if (
+		click.mb & 0x1 && click.x > console.x-scr_width/2 && 
+		click.x < (console.x+console.width)-scr_width/2 && 
+		click.y > console.y-scr_height/2 && 
+		click.y < (console.y+console.height)-scr_height/2 &&
+		bitcheck % 2 == 0
+		) { 
+					
+		ghostwX = console.x;
+		ghostwY = console.y;
+		
+		console.x += x*2;
+		console.y -= y*2;
+		
+		if (console.x - ghostwX > 0) {
+			drawRect(ghostwX, ghostwY, (console.x - ghostwX), console.height, 0xc41f42, scr_ptr);
+		}
+		if (console.x - ghostwX < 0) {
+			drawRect(console.x+console.width, ghostwY, (ghostwX - console.x), console.height, 0xc41f42, scr_ptr);
+		}
+		if (console.y - ghostwY > 0) {
+			drawRect(ghostwX, ghostwY, console.width, (console.y - ghostwY), 0xc41f42, scr_ptr);					
+		}
+		if (console.y - ghostwY < 0) {
+			drawRect(console.x, console.y+console.height, console.width - (console.x - ghostwX), (ghostwY - console.y), 0xc41f42, scr_ptr);
+		}
+		
+		bitcheck = 0;
+		
+		writeBuffer(console.x, console.y, console.width, console.height, (uint32_t*)console.data);
+	} 
+	
+	bitcheck++;
+}

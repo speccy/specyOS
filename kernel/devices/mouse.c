@@ -8,29 +8,26 @@
 #include <system.h>
 #include <compositor.h>
 
+#define MAX_HANDLERS 32
+
 extern uint8_t* scr_ptr;
 uint16_t scr_height;
 uint16_t scr_width;
-
 extern uint8_t* backbuffer;
 
-extern uint32_t* win_read;
-
-extern window_t console;
-
+unsigned char mouse_cycle = 0;
 signed int mouseX, mouseY =0;
 signed char mx, my;
-int ghostX = 0;
-int ghostY = 0;
-
-int ghostwX;
-int ghostwY;
-
-int bitcheck = 0;
-
-int x,y; 
-unsigned char mouse_cycle = 0;
+signed int ghostX = 0;
+signed int ghostY = 0;
 char mouse_bytes[3];
+
+mouse_handler_t mouse_handler_n[MAX_HANDLERS];
+uint8_t mouse_handlers = 0;
+click_t click;
+
+int i = 0;
+int x,y; 
 
 long mouseBox;
 
@@ -90,71 +87,49 @@ void mouse_handler(struct regs *r)
 			if (mouseY >= scr_height/2) mouseY = scr_height/2-1;
 			if (mouseY <= -scr_height/2) mouseY = -scr_height/2;
 			
-			if (mouse_bytes[0] & 0x4)
+			/*if (mouse_bytes[0] & 0x4)
 				drawString(10,100,"Middle button", 0x000000, 8, 0, scr_ptr);
 			if (mouse_bytes[0] & 0x2)
 				drawString(10,200,"Right button", 0x000000, 8, 0, scr_ptr);
 			if (mouse_bytes[0] & 0x1)
-				drawString(10,300,"Left button", 0x000000, 8, 0, scr_ptr);
-						
-			int bit;
-			if (
-				mouse_bytes[0] & 0x1 && mouseX > console.x-scr_width/2 && 
-				mouseX < (console.x+console.width)-scr_width/2 && 
-				mouseY > console.y-scr_height/2 && 
-				mouseY < (console.y+console.height)-scr_height/2 &&
-				bitcheck % 2 == 0
-				){ 
-					
-				int up, down, left, right = 0;
-
-				
-				drawString(10,400,"inside win", 0x000000, 8, 0, scr_ptr);
-				bit = 1;
-				//readBuffer(console.x, console.y, console.width, console.height, win_store);
-				
-				console.x += x*2;
-				console.y -= y*2;
-				
-				//drawRect(ghostwX, ghostwY, console.width, console.height, 0xc41f42, scr_ptr);
-				//drawRect(ghostwX, ghostwY, (console.x - ghostwX), console.height, 0xc41f42, scr_ptr);
-				
-				if (console.x - ghostwX > 0) {
-					drawRect(ghostwX, ghostwY, (console.x - ghostwX), console.height, 0xc41f42, scr_ptr);
-				}
-				if (console.x - ghostwX < 0) {
-					drawRect(console.x+console.width, ghostwY, (ghostwX - console.x), console.height, 0xc41f42, scr_ptr);
-				}
-				if (console.y - ghostwY > 0) {
-					drawRect(ghostwX, ghostwY, console.width, (console.y - ghostwY), 0xc41f42, scr_ptr);					
-				}
-				if (console.y - ghostwY < 0) {
-					drawRect(console.x, console.y+console.height, console.width - (console.x - ghostwX), (ghostwY - console.y), 0xc41f42, scr_ptr);
-				}
-				
-				bitcheck = 0;
-				
-				writeBuffer(console.x, console.y, console.width, console.height, (uint32_t*)console.data);
-				
-			} 
-			else {
-				drawString(10,400,"inside win", 0xc41f42, 8, 0, scr_ptr);
+				drawString(10,300,"Left button", 0x000000, 8, 0, scr_ptr); */
+									
+			click.x = mouseX;
+			click.y = mouseY;
+			click.gx = ghostX;
+			click.gy = ghostY;
+			click.mb = mouse_bytes[0];
+			
+			for (i = 0; i < mouse_handlers; i++) {
+				mouse_handler_t handler = mouse_handler_n[i];
+				handler(click);
 			}
 			
-			drawCursor(mouseX,mouseY,ghostX,ghostY, scr_ptr);			
+			drawCursor(mouseX, mouseY, ghostX, ghostY, scr_ptr);			
 
 			ghostX = mouseX;
 			ghostY = mouseY;
 			
-			ghostwX = console.x;
-			ghostwY = console.y;
-			
-			bitcheck++;
 			break;
 	} 
 }
 
+void del_mouse_handler(mouse_handler_t handler)
+{
+	for (i = 0; i < mouse_handlers; i++) {
+		if (mouse_handler_n[i] == handler)
+			memmove(&mouse_handler_n[i], &mouse_handler_n[i+1], (sizeof(mouse_handler_n[i]) * (mouse_handlers - i)));
+			mouse_handlers--;
+	}
+}
 
+void add_mouse_handler(mouse_handler_t handler)
+{
+	if (mouse_handlers != MAX_HANDLERS) {
+		mouse_handler_n[mouse_handlers] = handler;
+		mouse_handlers++;
+	}
+}
 
 void mouse_wait(unsigned char type)
 {
@@ -236,7 +211,5 @@ void drawCursor(signed int mouseX, signed int mouseY, int ghostX, int ghostY, ui
 		mouseBox = storePixmap(mouseX+scr_width/2,mouseY+scr_height/2,20,20, ctx);
 		drawPixmap(mouseX+scr_width/2, mouseY+scr_height/2, 20, 20, mousePixmap, ctx);
 	}
-	//drawRect(ghostX+scr_width/2, ghostY+scr_height/2, 10, 10, 0xc41f42, ctx);
-	//drawRect(mouseX+(scr_width/2), mouseY+(scr_height/2), 10, 10, 0xffffff, ctx);
 }
 

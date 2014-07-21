@@ -11,7 +11,6 @@
 #include <system.h>
 #include <graphics.h>
 
-
 typedef struct window
 {
   char *name;
@@ -41,7 +40,10 @@ void updateCursor();
 void winCursor(int mx, int my, window_t window);
 
 
+
+
 window_t spawnWindow(char* name, int x, int y, int width, int height, int priority, window_t parent);
+void window_movement_handler(click_t click);
 
 
 

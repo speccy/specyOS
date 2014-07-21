@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <screen.h>
 #include <timer.h>
-#include <compositor.h>
+//#include <compositor.h>
 
 void* memset(void* dest, int val, size_t count);
 void* memcpy(void* restrict dest, const void* restrict src, size_t count);
@@ -127,7 +127,22 @@ void init_kbd();
 void add_kb_handler(kb_handler_t handler);
 void del_kb_handler(kb_handler_t handler);
 
+
+// mouse
+typedef struct click {
+	signed int x;
+	signed int y;
+	signed int gx;
+	signed int gy;
+	char mb;
+} click_t;
+
+typedef void (*mouse_handler_t)(click_t click);
 void init_mouse();
+void add_mouse_handler(mouse_handler_t handler);
+void del_mouse_handler(mouse_handler_t handler);
+
+
 
 
 
