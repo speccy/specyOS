@@ -203,12 +203,12 @@ void init_mouse()
 void drawCursor(signed int mouseX, signed int mouseY, int ghostX, int ghostY, uint8_t* ctx)
 {
 	if (mouseBox == 0){
-		mouseBox = storePixmap(ghostX+scr_width/2,ghostY+scr_height/2,20,20, ctx);
+		mouseBox = storePixmap(ghostX+scr_width/2,ghostY+scr_height/2,20,20, backbuffer);
 		drawPixmap(mouseX+scr_width/2, mouseY+scr_height/2, 20, 20, mousePixmap, ctx);
 	}
 	else {
 		drawPixmap(ghostX+scr_width/2,ghostY+scr_height/2,20,20,mouseBox, ctx);
-		mouseBox = storePixmap(mouseX+scr_width/2,mouseY+scr_height/2,20,20, ctx);
+		mouseBox = storePixmap(mouseX+scr_width/2,mouseY+scr_height/2,20,20, backbuffer);
 		drawPixmap(mouseX+scr_width/2, mouseY+scr_height/2, 20, 20, mousePixmap, ctx);
 	}
 }

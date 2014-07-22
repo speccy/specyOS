@@ -67,6 +67,59 @@ long storePixmap(int x, int y, int width, int height, uint8_t* ctx)
 	return map;
 }
 
+void drawLine(int x0, int x1, int y0, int y1, int fill, uint8_t* ctx)
+{
+		int dx = abs(x1 - x0);
+		int dy = abs(y1 - y0);
+		int sx = (x0 < x1) ? 1 : -1;
+		int sy = (y0 < y1) ? 1 : -1;
+		int error = dx - dy;
+		while (1) {
+			if (x0 >= 0 && y0 >= 0 && x0 < scr_width && y0 < scr_height) {
+				drawPixel(x0, y0, fill, ctx);
+			}
+			if (x0 == x1 && y0 == y1) break;
+			int e2 = 2 * error;
+			if (e2 > -dx) {
+				error -= dy;
+				x0 += sx;
+			}
+			if (e2 < dx) {
+				error += dx;
+				y0 += sy;
+			}
+		}
+}
+
+void drawLineThick(int x0, int x1, int y0, int y1, int fill, int thickness, uint8_t* ctx)
+{
+	    int dx = abs(x1 - x0);
+		int dy = abs(y1 - y0);
+		int sx = (x0 < x1) ? 1 : -1;
+		int sy = (y0 < y1) ? 1 : -1;
+		int error = dx - dy;
+		int i,j;
+		while (1) {
+				for (j = 0; j <= thickness; ++j) {
+					for (i = 0; i <= thickness; ++i) {
+						if (x0 + i >= 0 && x0 + i < scr_width && y0 + j >= 0 && y0 + j < scr_height) {
+							drawPixel(x0 + i, y0 + j, fill, ctx);
+						}
+				}	
+			}
+			if (x0 == x1 && y0 == y1) break;
+			int e2 = 2 * error;
+			if (e2 > -dx) {
+				error -= dy;
+				x0 += sx;
+			}
+			if (e2 < dx) {
+				error += dx;
+				y0 += sy;
+			}
+		}
+}
+
 void drawPixmap(int x, int y, int width, int height, long *pixmap, uint8_t* ctx)
 {
 	int a, b, c;
@@ -103,6 +156,7 @@ void writeBuffer(int x, int y, int width, int height, uint32_t* buffer)
     int offset = (x) * (scr_pitch / scr_width) + (y) * (scr_pitch);
     for (i = 0; i < height; i++) {
 		memcpy(offset + scr_ptr + scr_pitch * i, buffer + width * i, width * (scr_pitch / scr_width));
+		memcpy(offset + backbuffer + scr_pitch * i, buffer + width * i, width * (scr_pitch / scr_width));
 	}
 }
 

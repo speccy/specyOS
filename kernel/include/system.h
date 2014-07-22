@@ -19,6 +19,7 @@ void* memcpy(void* restrict dest, const void* restrict src, size_t count);
 void* memmove(void* dest, const void* src, size_t count);
 
 #define ASSERT(b) ((b) ? (void)0 : strcmp("a","b"));
+#define abs(x) ((x)<0 ? -(x) : (x))
 
 void outb(unsigned short port, unsigned char data);
 unsigned char inb(unsigned short port);

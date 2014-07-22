@@ -21,6 +21,10 @@ void writeBuffer(int x, int y, int width, int height, uint32_t* buffer);
 void writePixel(int x, int y, int width, int height, int fill, uint32_t* ctx);
 void readBuffer(int x, int y, int width, int height, uint32_t* buffer);
 
+void drawLine(int x0, int x1, int y0, int y1, int fill, uint8_t* ctx);
+void drawLineThick(int x0, int x1, int y0, int y1, int fill, int thickness, uint8_t* ctx);
+
+
 
 
 #endif

@@ -11,6 +11,8 @@
 #include <system.h>
 #include <graphics.h>
 
+#define MAX_WINDOWS 128
+
 typedef struct window
 {
   char *name;
@@ -33,7 +35,7 @@ void writeChar(int x, int y, unsigned char character, int fill, window_t ctx);
 void writeString(int x, int y, char *string, int color, int fontSize, int tall, window_t ctx);
 
 
-void init_compositor(uint8_t* ctx);
+void init_compositor_old(uint8_t* ctx);
 
 void drawCursor(signed int mouseX,signed int mouseY, int ghostX, int ghostY, uint8_t* ctx);
 void updateCursor();

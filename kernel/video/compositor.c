@@ -35,14 +35,19 @@ uint8_t* backbuffer;
 window_t desktop;
 window_t console;
 
+window_t windows[MAX_WINDOWS];
+uint8_t window_number = 0;
+
 void update_console(char c);
 void keySpawnEnter(char c);
 
-int x, y;
+int x, y, i;
 
 int bitcheck = 0;
 
-void init_compositor(uint8_t* ctx)
+int thickness;
+
+void init_compositor_old(uint8_t* ctx)
 {
 	backbuffer = (uint8_t*)kmalloc(scr_pitch * scr_height);
 	//memset(backbuffer, 0xFF, scr_pitch * scr_height);
@@ -108,7 +113,8 @@ window_t spawnWindow(char* name, int x, int y, int width, int height, int priori
 	//drawRect(x-2, y-2, width+4, height+4, 0xC98F9C, scr_ptr);
 	writeBuffer(x, y, width, height, (uint32_t*)window.data);
 	
-	
+	windows[window_number] = window;
+	window_number++;
 	
 	//memcpy(scr_ptr, backbuffer, scr_pitch*scr_height);
 	return window;
@@ -143,37 +149,101 @@ void winCursor(int mx, int my, window_t window)
 
 void window_movement_handler(click_t click)
 {
-	if (
-		click.mb & 0x1 && click.x > console.x-scr_width/2 && 
-		click.x < (console.x+console.width)-scr_width/2 && 
-		click.y > console.y-scr_height/2 && 
-		click.y < (console.y+console.height)-scr_height/2 &&
-		bitcheck % 2 == 0
-		) { 
-					
-		ghostwX = console.x;
-		ghostwY = console.y;
-		
-		console.x += x*2;
-		console.y -= y*2;
-		
-		if (console.x - ghostwX > 0) {
-			drawRect(ghostwX, ghostwY, (console.x - ghostwX), console.height, 0xc41f42, scr_ptr);
-		}
-		if (console.x - ghostwX < 0) {
-			drawRect(console.x+console.width, ghostwY, (ghostwX - console.x), console.height, 0xc41f42, scr_ptr);
-		}
-		if (console.y - ghostwY > 0) {
-			drawRect(ghostwX, ghostwY, console.width, (console.y - ghostwY), 0xc41f42, scr_ptr);					
-		}
-		if (console.y - ghostwY < 0) {
-			drawRect(console.x, console.y+console.height, console.width - (console.x - ghostwX), (ghostwY - console.y), 0xc41f42, scr_ptr);
-		}
-		
-		bitcheck = 0;
-		
-		writeBuffer(console.x, console.y, console.width, console.height, (uint32_t*)console.data);
-	} 
-	
+	for(i=0; i<window_number; i++) {
+		if (
+			click.mb & 0x1 && 
+			click.x > windows[i].x-scr_width/2 && 
+			click.x < (windows[i].x+windows[i].width)-scr_width/2 && 
+			click.y > windows[i].y-scr_height/2 && 
+			click.y < (windows[i].y+windows[i].height)-scr_height/2 &&
+			bitcheck % 2 == 0
+			) { 		
+			ghostwX = windows[i].x;
+			ghostwY = windows[i].y;
+			
+			drawBorder(windows[i], 0xc41f42, thickness, backbuffer);
+			drawBorder(windows[i], 0xc41f42, thickness, scr_ptr);
+			
+			windows[i].x += x*2;
+			windows[i].y -= y*2;
+			
+			if (windows[i].x - ghostwX > 0) {
+				writeBuffer(ghostwX, ghostwY, (windows[i].x - ghostwX), windows[i].height + thickness, backbuffer);
+			}
+			if (windows[i].x - ghostwX < 0) {
+				writeBuffer(windows[i].x+windows[i].width, ghostwY, (ghostwX - windows[i].x), windows[i].height, backbuffer);
+			}
+			if (windows[i].y - ghostwY > 0) {
+				writeBuffer(ghostwX, ghostwY, windows[i].width, (windows[i].y - ghostwY), backbuffer);					
+			}
+			if (windows[i].y - ghostwY < 0) {
+				writeBuffer(windows[i].x, windows[i].y+windows[i].height, windows[i].width - (windows[i].x - ghostwX), (ghostwY - windows[i].y), backbuffer);
+			}
+			
+			drawBorder(windows[i], 0xC98F9C, thickness, backbuffer);
+			drawBorder(windows[i], 0xC98F9C, thickness, scr_ptr);
+
+			bitcheck = 0;
+			
+			writeBuffer(windows[i].x, windows[i].y, windows[i].width, windows[i].height, (uint32_t*)windows[i].data);
+		} 
+	}
 	bitcheck++;
 }
+
+
+
+/////////////////////////////////// REWRITE /////////////////////////////////// 
+
+void init_compositor(uint8_t* ctx)
+{
+	backbuffer = (uint8_t*)kmalloc(scr_pitch * scr_height); 
+	
+	/* sets thickness of window borders */
+	thickness = 3;
+	
+	/* creates a new window to act as the desktop */
+	static window_t window;
+	window.name = "Desktop";
+	window.x = 0;
+	window.y = 0;
+	window.z = 0;
+	window.width = scr_width;
+	window.height = scr_height;
+	window.id = 0;
+	window.parentid = 0;
+	
+	window.data = (uint32_t*)kmalloc(scr_pitch * scr_height);
+	
+	/* draws the background */
+	drawRect(window.x, window.y, window.width, window.height , 0xc41f42, window.data);
+	
+	/* draws strings on top of the background */
+	drawString(window.width * 0.5 - 8 * 8, window.height * 0.1, "muh minimalism tho", 0xffffff, 8, 0, window.data);
+	drawString(window.width * 0.9 - 6 * 8, window.height * 0.95, "specyOS 0.0.2", 0x222222, 8, 0, window.data);
+	
+	/* writes to desktop to screen and backbuffer */
+	writeBuffer(0, 0, scr_width, scr_height, (uint32_t*)window.data);
+	
+	/* draws four test windows */
+	window_t one = spawnWindow("one", 50, 100, 400, 250, 1, desktop);
+	window_t two = spawnWindow("two", 800, 300, 400, 250, 1, desktop);
+	window_t three = spawnWindow("three", 400, 500, 150, 100, 1, desktop);
+	window_t four = spawnWindow("four", 500, 200, 200, 100, 1, desktop);
+	drawBorder(three, 0xC98F9C, thickness, scr_ptr);
+
+	/* adds mouse handler for dragging */
+	add_mouse_handler(window_movement_handler);
+}
+
+void drawBorder(window_t window, int fill, char thickness, uint8_t* ctx)
+{
+	if (thickness != 0) {
+		drawRect(window.x, window.y - thickness, window.width + thickness, thickness, fill, ctx); // draws top border
+		drawRect(window.x + window.width, window.y, thickness, window.height + thickness, fill, ctx); // draws right border
+		drawRect(window.x - thickness, window.y + window.height, window.width + thickness, thickness, fill, ctx); // draws bottom border
+		drawRect(window.x - thickness, window.y - thickness, thickness, window.height + thickness, fill, ctx); // draws left border
+	}
+}
+
+
